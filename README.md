@@ -37,7 +37,7 @@
         
     - [x]  division
         
-    - [ ]  dot product
+    - [x]  dot product
         
     - [ ]  cross product
         
