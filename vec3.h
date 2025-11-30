@@ -34,6 +34,10 @@ class vec3 {
     }
 
     vec3& operator+=(const vec3& v) {
+      //const vec3& v --> so that the function doesn't modify v.
+      //& is used so that we don't just copy the v and use it.
+      //by default if we don't use '&' the compiler will just copy the value
+      //into some temp variable and use it.
       e[0] += v.e[0];
       e[1] += v.e[1];
       e[2] += v.e[2];
@@ -42,8 +46,16 @@ class vec3 {
       // e.g. vec3 obj_1
       // then the *this will dereference the obj_1.
     }
-
+      // operator chaining, above we can do a += b += c;
+      // because we are referencing the object directly
+      // it'll work something like this:-
+      // 1. object b will be referenced and modified and object c is the
+      //    const vec3. here b will be dereferenced by *this and returned.
+      // 3. object a will be referenced and modified and object b is now
+      //    the const vec3. here a will be dereferenced by *this and returned.
     vec3& operator*=(double t) {
+      // can also write 'const double& t' but it would be 
+      // an overkill
       e[0] *= t;
       e[1] *= t;
       e[2] *= t;
@@ -51,7 +63,16 @@ class vec3 {
     }
 
     vec3& operator/=(double t) {
-      return *this *= 1/t;
+      return *this *= 1/t; 
+      //operator/= calls operator*=
+      //operator*= performs real math
+      // what it does is that v *= 1/t;
+      // we can also write this instead of this.
+      //e[0] /= t;
+      //e[1] /= t;
+      //e[2] /= t;
+      //return *this;
+
     }
 
     double length() const {

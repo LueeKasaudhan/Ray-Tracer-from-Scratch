@@ -25,17 +25,17 @@
 
 ### ⭐ Concept: Build the mathematical backbone
 
-- [ ]  Implement `vec3` type with `x, y, z`
+- [x]  Implement `vec3` type with `x, y, z`
     
 - [ ]  Implement vector operations:
     
-    - [ ]  addition
+    - [x]  addition
         
-    - [ ]  subtraction
+    - [x]  subtraction
         
-    - [ ]  scaling
+    - [x]  scaling
         
-    - [ ]  division
+    - [x]  division
         
     - [ ]  dot product
         
