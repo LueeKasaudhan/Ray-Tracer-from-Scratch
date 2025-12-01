@@ -40,7 +40,18 @@
     - [x]  dot product
         
     - [ ]  cross product
-        
+          
+- [ ] understanding vectors, functionals, functions, vector spaces.
+	- [x] meaning of dot product
+	- [x] Functionals
+	- [x] Vector spaces
+	- [ ] Normals and it's transformations
+	- [ ] Covectors
+	- [ ] Gradients
+	- [ ] Column vectors
+	- [ ] Row vectors
+	- [ ] Dual spaces
+      
 - [ ]  Implement `unit_vector`
     
 - [ ]  Create aliases `color` and `point3`
