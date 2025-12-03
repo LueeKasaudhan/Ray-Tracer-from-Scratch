@@ -27,7 +27,7 @@
 
 - [x]  Implement `vec3` type with `x, y, z`
     
-- [ ]  Implement vector operations:
+- [x]  Implement vector operations:
     
     - [x]  addition
         
@@ -39,24 +39,33 @@
         
     - [x]  dot product
         
-    - [ ]  cross product
+    - [x]  cross product
           
-- [ ] understanding vectors, functionals, functions, vector spaces.
+- [x] understanding vectors, functionals, functions, vector spaces.
+      
 	- [x] meaning of dot product
+	      
 	- [x] Functionals
+	      
 	- [x] Vector spaces
+	      
 	- [x] Normals and it's transformations
+	      
 	- [x] Covectors
+	      
 	- [x] Gradients
+	      
 	- [x] Column vectors
+	      
 	- [x] Row vectors
+	      
 	- [x] Dual spaces
       
 - [x]  Implement `unit_vector`
     
-- [ ]  Create aliases `color` and `point3`
+- [x]  Create aliases `color` and `point3`
     
-- [ ]  Implement the `write_color()` helper
+- [x]  Implement the `write_color()` helper
     
 
 ---
