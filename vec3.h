@@ -1,5 +1,5 @@
 #ifndef VEC3_H
-#define VEC3_h
+#define VEC3_H
 
 #include<cmath>
 #include<iostream>
@@ -89,7 +89,7 @@ class vec3 {
 
     
     
-}
+};
 
 using point3 = vec3;
 //point3 is an alias for vec3
@@ -105,38 +105,38 @@ inline std::ostream& operator<<(std::ostream& out, const vec3& v) {
 //        std::cout << v;
 
 
-inline vec3& operator+(const vec3& u, const vec3& v) {
+inline vec3 operator+(const vec3& u, const vec3& v) {
   return vec3(
-      u.e[0] + v.e[0]
-      u.e[1] + v.e[1]
+      u.e[0] + v.e[0],
+      u.e[1] + v.e[1],
       u.e[2] + v.e[2]
       );
 }
-inline vec3& operator-(const vec3& u, const vec3& v) {
+inline vec3 operator-(const vec3& u, const vec3& v) {
   return vec3(
-      u.e[0] - v.e[0]
-      u.e[1] - v.e[1]
+      u.e[0] - v.e[0],
+      u.e[1] - v.e[1],
       u.e[2] - v.e[2]
       );
 }
-inline vec3& operator*(const vec3& u, const vec3& v) {
+inline vec3 operator*(const vec3& u, const vec3& v) {
   return vec3(
-      u.e[0] * v.e[0]
-      u.e[1] * v.e[1]
+      u.e[0] * v.e[0],
+      u.e[1] * v.e[1],
       u.e[2] * v.e[2]
       );
 }
-inline vec3& operator*(double t, const vec3& v) {
+inline vec3 operator*(double t, const vec3& v) {
   return vec3(
-      t * v.e[0]
-      t * v.e[1]
+      t * v.e[0],
+      t * v.e[1],
       t * v.e[2]
       );
 }
-inline vec3& operator*(const vec3& v, double t) {
+inline vec3 operator*(const vec3& v, double t) {
   return t * v;
 }
-inline vec3& operator/(const vec3& u, double t) {
+inline vec3 operator/(const vec3& v, double t) {
   return (1/t) * v;
 }
 inline double dot(const vec3& u, const vec3& v) {
@@ -146,11 +146,14 @@ inline double dot(const vec3& u, const vec3& v) {
     u.e[2] * v.e[2] ;
 }
 inline vec3 cross(const vec3& u, const vec3& v) {
-  return
-    ((u.e[0] * v.e[1]) - (u.e[1] * v.e[0])) +
-    ((u.e[1] * v.e[2]) - (u.e[2] * v.e[1])) +
-    ((u.e[2] * v.e[0]) - (u.e[0] * v.e[2])) ;
+  return vec3(
+    ((u.e[0] * v.e[1]) - (u.e[1] * v.e[0])) ,
+    ((u.e[1] * v.e[2]) - (u.e[2] * v.e[1])) ,
+    ((u.e[2] * v.e[0]) - (u.e[0] * v.e[2]))
+      );
 }
 inline vec3 unit_vector(const vec3& v) {
   return v / v.length();
 }
+
+#endif
