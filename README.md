@@ -45,14 +45,14 @@
 	- [x] meaning of dot product
 	- [x] Functionals
 	- [x] Vector spaces
-	- [ ] Normals and it's transformations
-	- [ ] Covectors
-	- [ ] Gradients
-	- [ ] Column vectors
-	- [ ] Row vectors
-	- [ ] Dual spaces
+	- [x] Normals and it's transformations
+	- [x] Covectors
+	- [x] Gradients
+	- [x] Column vectors
+	- [x] Row vectors
+	- [x] Dual spaces
       
-- [ ]  Implement `unit_vector`
+- [x]  Implement `unit_vector`
     
 - [ ]  Create aliases `color` and `point3`
     
