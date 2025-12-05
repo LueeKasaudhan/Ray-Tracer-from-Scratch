@@ -96,7 +96,7 @@ vec3 lerp(const vec3& color_max, const vec3& color_min, float blend_factor) {
  0.89  0.75  0.57  0.39  0.27  0.39  0.57  0.75  0.89
  1.00  0.89  0.75  0.64  0.63  0.64  0.75  0.89  1.00
 
---- brightness value of the color_max ---
+--- brightness value of the color_max --- (1-blend_factor)
  0.00  0.11  0.25  0.36  0.37  0.36  0.25  0.11  0.00
  0.11  0.25  0.43  0.61  0.73  0.61  0.43  0.25  0.11
  0.25  0.43  0.68  0.79  0.87  0.79  0.68  0.43  0.25
