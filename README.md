@@ -66,7 +66,8 @@
 - [x]  Create aliases `color` and `point3`
     
 - [x]  Implement the `write_color()` helper
-    
+      
+- [ ] Do exercises.
 
 ---
 
@@ -390,3 +391,5 @@ P3
 
 ```
 
+**Image Flipping**
+	if you wanna flip the image just flip the pixels => it'll be flipped.
