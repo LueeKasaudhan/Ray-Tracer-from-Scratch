@@ -15,7 +15,7 @@ using namespace std;
 vec3 lerp(const vec3& color_max, const vec3& color_min, float blend_factor);
 
 int main() {
-  ofstream file("lerp_image.ppm");
+  ofstream file("diagonal_stripes.ppm");
   if(!file.is_open()) {
     cerr << "failed to open the file";
     return EXIT_FAILURE;
@@ -28,26 +28,11 @@ int main() {
 
 
   for(int i=0; i<image_height; i++) {
-    for(int j=0; j<image_width; j++) {
-      float center_x = image_width  / 2.0;
-      float center_y = image_height / 2.0;
-
-      // each pixel_pos decided 
-      vec3 pixel_pos(i, j, 0);
-      vec3 center(center_x, center_y, 0); //fixed
-
-      // distance = radius of the image from the center, for each row and column
-      float distance = (pixel_pos - center).length();
-      float max_dist = sqrt(center_x*center_x + center_y*center_y); // fixed
-
-      float t = distance / max_dist;      // normalized 0 → 1.0; x 0-206 row
-                                          // y: 0-206 column
-                                          // changes for each pixel from 0 to 1
-
-      vec3 pixel_color = lerp(vec3(0,0,0), vec3(1,1,1), t);
-
+    for(int j=0; j<image_width; j++) { 
+      int N = 100;
+      double stripes = double((i+j)%N)/double(N);
+      vec3 pixel_color(stripes,stripes,stripes);
       write_color(file, pixel_color);
-
     }
   }
 
