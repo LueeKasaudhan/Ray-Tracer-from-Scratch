@@ -519,3 +519,377 @@ Every intersection problem becomes:
 That's why this equation is the **core** of ray tracing.
 
 ---
+
+# 🔥 1. How does the ray “move”?
+
+The ray equation:
+
+P(t) = A + t * b  
+
+means:
+
+- Start at **A**
+    
+- Move in direction **b**
+    
+- Take **t** steps of size **b**
+    
+
+So the ray “moves” by nothing more than:
+
+```
+P_next = P_prev + (Δt * b)
+```
+
+If Δt = 1 → P = A + b  
+If Δt = 0.1 → P = A + 0.1b  
+If Δt = 123.789 → P = A + 123.789b
+
+Yes — literally **just adding vectors**.
+
+---
+
+# 🧠 2. Why this works (low-level explanation)
+
+Imagine A is a memory address (not literally, but just imagine):
+
+```
+A = [Ax, Ay, Az]
+b = [bx, by, bz]
+```
+
+Then:
+
+```
+P(t) = [
+    Ax + t * bx,
+    Ay + t * by,
+    Az + t * bz
+]
+```
+
+It's nothing but adding three floats.
+
+The CPU is basically doing this:
+
+```
+mul b, t
+add A, (b*t)
+```
+
+No loops  
+No physics  
+No integration  
+Nothing hardcore
+
+This is why ray tracing is so elegant.
+
+---
+# 🎯 4. But how do we _actually_ use it?
+
+We never “animate” the ray by increasing t.  
+Instead:
+
+👉 We **solve** for the t where the ray hits an object.  
+👉 That tells us _where_ on the ray the collision happens.
+
+---
+
+# 🧨 5. Mind-blowing fact
+
+A ray tracer **never** simulates the ray moving.
+
+It just:
+
+1. Computes the parameter t where something happens
+    
+2. Uses vector addition to jump directly to that point
+    
+
+The ray equation is like a _teleporter_, not a _walking animation_.
+
+---
+
+# 🎥 Building the Camera Step-by-Step
+
+A camera in ray tracing isn’t a real camera.  
+It’s just:
+
+- A point in space (the camera center) generally(0,0,0)
+    
+- A rectangle floating in front of it (the viewport)
+    
+- A bunch of tiny squares on that rectangle (pixels)
+    
+- Rays fired from the camera to the middle of each pixel
+
+---
+
+# 🎥 **1. Camera, Viewport, Pixel Grid — Conceptual Overview**
+
+![Image](https://raytracing.github.io/images/fig-1.03-cam-geom.jpg?utm_source=chatgpt.com)
+
+![Image](https://img2.quasarzone.co.kr/img/data/img/editor/1809/1809___1275788209.png?utm_source=chatgpt.com)
+
+![Image](https://www.scratchapixel.com/images/introduction-to-ray-tracing/lightingnoshadow.gif?utm_source=chatgpt.com)
+
+![Image](https://slideplayer.com/slide/14084485/86/images/14/Pixel%2BCalculation%2BCoordinate%2B%28in%2Bu%2Cv%2Cn%2Bspace%29%2Bof%2Bupper%2Bleft%2Bpixel%2Bcenter%2B%3D%2BThen%2Bback%2Boff%2Bhalf%2Ba%2Bpixel%2Bwidth%2Band%2Bheight%2Bto%2Bcompute%2Bpixel%2Bcenter..jpg?utm_source=chatgpt.com)
+
+---
+
+## 📌 **Camera**
+
+- A point in 3D space (usually at `(0,0,0)`).
+    
+- It looks **toward −Z** in a right-handed coordinate system.
+    
+- All rays originate from this point.
+    
+
+---
+
+## 📌 **Viewport**
+
+Think of the viewport as:
+
+> **A rectangular window floating in front of the camera, representing the entire field of view.**
+
+It is:
+
+- Placed at `z = -focal_length`
+    
+- A physical size in world-space
+    
+- Divided into pixels (sub-rectangles)
+    
+
+### Viewport size
+
+```cpp
+viewport_height = 2.0
+viewport_width  = viewport_height * aspect_ratio
+```
+
+### Key idea
+
+Viewport size determines **FOV**,  
+Image resolution only determines **detail**.
+
+---
+
+# 🧭 **2. Viewport Axes (viewport_u & viewport_v)**
+
+## 🎯 **viewport_u**
+
+- 3D vector pointing **right** across the viewport
+    
+- Size = viewport width
+    
+- Example:
+    
+    ```
+    viewport_u = (viewport_width, 0, 0)
+    ```
+    
+
+## 🎯 **viewport_v**
+
+- 3D vector pointing **DOWN** across the viewport
+    
+- Yes: DOWN = negative Y
+    
+- Why?
+    
+    - Image pixel rows increase downward
+        
+    - But world Y increases upward
+        
+    - So we flip sign to synchronize them
+        
+- Example:
+    
+    ```
+    viewport_v = (0, -viewport_height, 0)
+    ```
+    
+
+---
+
+# 🧱 **3. World Coordinates vs Image Coordinates**
+
+## 🌍 **World Coordinates**
+
+- Used to define actual 3D positions.
+    
+- +X → right
+    
+- +Y → up
+    
+- −Z → forward
+    
+- Origin = camera center
+    
+
+## 🖼️ **Image (Pixel) Coordinates**
+
+- Used for looping through pixels:
+    
+    ```
+    i = 0 → width-1
+    j = 0 → height-1
+    ```
+    
+- Pixel (0,0) = **top-left**
+    
+- Rows increase **downward**
+    
+
+## 🧨 Why we need viewport_v negative?
+
+Because:
+
+- Image j-direction = downward
+    
+- World +Y = upward
+    
+
+So we sync them by defining:
+
+```
+viewport_v = (0, -H, 0)
+```
+
+This ensures pixel rows map correctly onto the viewport.
+
+---
+
+# 🔬 **4. Pixel Spacing (pixel_delta_u, pixel_delta_v)**
+
+These represent the **world-space width & height of one pixel**.
+
+```
+pixel_delta_u = viewport_u / image_width
+pixel_delta_v = viewport_v / image_height
+```
+
+Meaning:
+
+- Move 1 pixel right → add pixel_delta_u
+    
+- Move 1 pixel down → add pixel_delta_v
+    
+
+Each pixel is a tiny rectangle on the viewport.
+
+### Does entire pixel get same color?
+
+✔ **Yes in Chapter 4.**  
+We fire **one ray per pixel** → entire pixel = same color.  
+(Antialiasing later fires many rays/pixel.)
+
+---
+
+# 🎯 **5. Computing viewport_upper_left**
+
+### Formula:
+
+```cpp
+viewport_upper_left =
+      camera_center
+    - vec3(0,0,focal_length)
+    - viewport_u/2
+    - viewport_v/2;
+```
+
+## 💡 Intuition
+
+### Step 1 → Move from camera to viewport plane
+
+```
+camera_center - (0,0,focal_length)
+```
+
+### Step 2 → Move LEFT by half-width
+
+```
+- viewport_u/2
+```
+
+### Step 3 → Move UP by half-height
+
+```
+- viewport_v/2
+```
+
+⚡ Combine all → You land at the **top-left corner of the viewport**.
+
+---
+
+# 🎯 **6. Computing pixel00_loc (center of first pixel)**
+
+### Formula:
+
+```cpp
+pixel00_loc = viewport_upper_left
+            + 0.5 * (pixel_delta_u + pixel_delta_v);
+```
+
+## 💡 Intuition
+
+- The viewport corner is the _outer_ edge of the screen.
+    
+- Pixel centers lie **half a pixel inward**.
+    
+
+So we move:
+
+- half pixel right
+    
+- half pixel down
+    
+
+That gives the exact **center of pixel (0,0)**.
+
+---
+
+# 🔍 **7. Final Diagram (ASCII)**
+
+```
+                   +Y (up)
+                     ↑
+                     |
+              UL (viewport upper-left)
+                     ●
+                     |\
+                     | \
+                     |  \  half pixel right (0.5 * delta_u)
+                     |   \
+                     |    ● pixel00_loc (center)
+                     |
+camera ●-------------+-----------------------> +X
+(0,0,0)              |
+                     v
+                    -Z (camera looks here)
+```
+
+---
+
+# 🧠 **8. Key Takeaways (Obsidian TL;DR)**
+
+- **Viewport = physical FOV plane in front of camera.**
+    
+- **Pixel grid subdivides the viewport.**
+    
+- **viewport_u & viewport_v = world-space width/height directions.**
+    
+- **pixel deltas = size of 1 pixel on viewport.**
+    
+- **viewport_upper_left = corner of viewport.**
+    
+- **pixel00_loc = center of first pixel (top-left).**
+    
+- **Rays fire from camera → pixel centers → world.**
+    
+
+---
+
