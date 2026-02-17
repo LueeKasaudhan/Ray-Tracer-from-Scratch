@@ -10,7 +10,12 @@ using namespace std;
 color ray_color(const ray& r) {
   vec3 unit_direction = unit_vector(r.direction());
   auto a = 0.5 * (unit_direction.y() + 1.0);
-  return (1.0 - a)*color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
+//  return (1.0 - a)*color(1.0, 1.0, 1.0) + a * color(1.0, 0.5, 0.2);
+  return color(
+     fabs(unit_direction.x()),
+     fabs(unit_direction.y()),
+     fabs(unit_direction.z())
+      );
 }
 
 int main(){
@@ -22,7 +27,7 @@ int main(){
   image_height = image_height<1 ? 1 : image_height;
 
   //setting camera
-  auto focal_length = 1.0;
+  auto focal_length = 1;
   auto camera_center = point3(0,0,0);
 
   //setting viewport for fov
@@ -53,7 +58,7 @@ int main(){
 
   for(int i = 0; i < image_height; i++) {
     for(int j = 0; j < image_width; j++) {
-      auto pixel_center_for_each_pixel = pixel00_loc + (i * pixel_delta_v) + (j * pixel_delta_u);
+      auto pixel_center_for_each_pixel = pixel00_loc + ((image_height-i) * pixel_delta_v) + ((image_width-j) * pixel_delta_u);
       auto ray_direction = pixel_center_for_each_pixel - camera_center;
       ray r(camera_center, ray_direction);
 

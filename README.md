@@ -75,15 +75,15 @@
 
 ### ⭐ Concept: Fire rays into the scene
 
-- [ ]  Implement `ray` class with `origin`, `direction`, and `at(t)`
+- [x]  Implement `ray` class with `origin`, `direction`, and `at(t)`
     
-- [ ]  Understand image coordinates vs. 3D coordinates
+- [x]  Understand image coordinates vs. 3D coordinates
     
-- [ ]  Implement **simple camera**
+- [x]  Implement **simple camera**
     
-- [ ]  Compute pixel ray directions
+- [x]  Compute pixel ray directions
     
-- [ ]  Implement sky gradient using lerp
+- [x]  Implement sky gradient using lerp
     
 
 ---
@@ -761,11 +761,15 @@ viewport_v = (0, -H, 0)
 
 This ensures pixel rows map correctly onto the viewport.
 
+**The viewport_u and viewport_v are only here for 3D calculation in vector spaces, these are not actual coordinates which the world-space maps to.**
+
 ---
 
 # 🔬 **4. Pixel Spacing (pixel_delta_u, pixel_delta_v)**
 
 These represent the **world-space width & height of one pixel**.
+E.g. let say the **world-space width & height is 512 x 512**.
+	Dividing the viewport_u and viewport_v into 512 parts equally.
 
 ```
 pixel_delta_u = viewport_u / image_width
@@ -872,8 +876,8 @@ camera ●-------------+-----------------------> +X
                     -Z (camera looks here)
 ```
 
+![[camera_and_viewport_concept.png]]
 ---
-
 # 🧠 **8. Key Takeaways (Obsidian TL;DR)**
 
 - **Viewport = physical FOV plane in front of camera.**
